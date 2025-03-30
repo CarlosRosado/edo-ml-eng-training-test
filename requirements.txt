@@ -1,0 +1,11 @@
+scikit-learn
+lightgbm
+pandas
+matplotlib
+seaborn
+numpy
+pytest
+mlflow
+fastapi
+uvicorn
+prometheus_client==0.21.1

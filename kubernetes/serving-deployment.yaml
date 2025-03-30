@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serving-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: serving
+  template:
+    metadata:
+      labels:
+        app: serving
+    spec:
+      containers:
+      - name: serving-container
+        image: carlosrosado/serving-edo-image:latest
+        ports:
+        - containerPort: 8000 # Application port
+        - containerPort: 9090 # Prometheus metrics port
+        envFrom:
+        - configMapRef:
+            name: mlflow-config
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 9090
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 20

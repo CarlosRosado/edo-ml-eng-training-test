@@ -1,0 +1,90 @@
+swagger: "2.0"
+info:
+  title: "Serving Prediction API"
+  description: "This is the OpenAPI specification for the Serving Prediction API."
+  version: "1.0.0"
+host: "localhost:8000" 
+basePath: "/"
+schemes:
+- "http"
+paths:
+  /:
+    get:
+      summary: "Root Endpoint"
+      description: "Returns a welcome message."
+      responses:
+        "200":
+          description: "Successful response"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+  /predict:
+    post:
+      summary: "Make a Prediction"
+      description: "Performs a prediction based on the provided input features."
+      operationId: "predict"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The input features for the prediction."
+        required: true
+        schema:
+          $ref: "#/definitions/PredictRequest"
+      responses:
+        "200":
+          description: "Successful prediction"
+          schema:
+            $ref: "#/definitions/PredictResponse"
+        "400":
+          description: "Bad request"
+        "500":
+          description: "Internal server error"
+  /specifications:
+    get:
+      summary: "Get OpenAPI Specifications"
+      description: "Returns the OpenAPI specifications."
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful response"
+          schema:
+            type: "object"
+  /metrics:
+    get:
+      summary: "Metrics Endpoint"
+      description: "Returns the current metrics of the service."
+      produces:
+      - "text/plain"
+      responses:
+        "200":
+          description: "Successful response"
+definitions:
+  PredictRequest:
+    type: "object"
+    properties:
+      features:
+        type: "array"
+        items:
+          type: "number"
+        description: "The input features for the prediction."
+  PredictResponse:
+    type: "object"
+    properties:
+      prediction:
+        type: "array"
+        items:
+          type: "number"
+        description: "The predicted values."
+      model:
+        type: "string"
+        description: "The name of the model used for the prediction."
+      version:
+        type: "string"
+        description: "The version of the model used for the prediction."
